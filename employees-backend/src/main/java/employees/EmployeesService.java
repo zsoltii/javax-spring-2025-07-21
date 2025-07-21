@@ -1,9 +1,11 @@
 package employees;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,24 +17,32 @@ import java.util.function.Supplier;
 @Slf4j
 public class EmployeesService {
 
+    public static final String EMPLOYEES = "employees";
+    public static final String EMPLOYEE = "employee";
     private final EmployeesRepository repository;
 
-    @Cacheable("employees")
+    @Cacheable(EMPLOYEES)
     public List<EmployeeDto> listEmployees() {
         log.info("listEmployees");
         return repository.findAllResources();
     }
 
+    @Cacheable(EMPLOYEE)
     public EmployeeDto findEmployeeById(long id) {
         return toDto(repository.findById(id).orElseThrow(notFountException(id)));
     }
 
+    @CacheEvict(cacheNames = { EMPLOYEES }, allEntries = true)
     public EmployeeDto createEmployee(EmployeeDto command) {
         Employee employee = new Employee(command.name().toUpperCase());
         repository.save(employee);
         return toDto(employee);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = { EMPLOYEE, EMPLOYEES }, allEntries = true),
+            @CacheEvict(value = EMPLOYEE, key = "#id")
+    })
     @Transactional
     public EmployeeDto updateEmployee(long id, EmployeeDto command) {
         Employee employee = repository.findById(id).orElseThrow(notFountException(id));
@@ -40,6 +50,11 @@ public class EmployeesService {
         return toDto(employee);
     }
 
+
+    @Caching(evict = {
+            @CacheEvict(cacheNames = { EMPLOYEE, EMPLOYEES }, allEntries = true),
+            @CacheEvict(value = EMPLOYEE)
+    })
     public void deleteEmployee(long id) {
         repository.deleteById(id);
     }
