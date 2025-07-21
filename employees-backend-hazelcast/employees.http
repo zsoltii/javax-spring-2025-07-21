@@ -2,6 +2,10 @@
 GET http://localhost:8081/api/employees
 Accept: application/json
 
+### List all employees
+GET http://localhost:8082/api/employees
+Accept: application/json
+
 ### Find employee by id
 GET http://localhost:8081/api/employees/1
 Accept: application/json

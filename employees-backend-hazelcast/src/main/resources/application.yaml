@@ -11,6 +11,10 @@ spring:
     generate-ddl: true
   jackson:
     default-property-inclusion: non_null
+  cache:
+    type: hazelcast
+    hazelcast:
+        config: classpath:hazelcast.yaml
 
 management:
   endpoints:
