@@ -7,3 +7,7 @@ docker run -d -e POSTGRES_DB=employees -e POSTGRES_USER=employees -e POSTGRES_PA
 Teams:
 
 https://teams.microsoft.com/meet/3912307217785?p=wWXsh9Rq2Bg3NnkQGn
+
+```shell
+docker run --name employees-redis -p 6379:6379 -d redis
+```
