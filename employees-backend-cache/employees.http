@@ -3,7 +3,7 @@ GET http://localhost:8081/api/employees
 Accept: application/json
 
 ### Find employee by id
-GET http://localhost:8081/api/employees/2
+GET http://localhost:8081/api/employees/1
 Accept: application/json
 
 ### Create employee
