@@ -1,6 +1,7 @@
 package employees;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/employees")
 @Slf4j
+@RequiredArgsConstructor
 public class EmployeesController {
 
-    private EmployeesService employeesService;
-
-    public EmployeesController(EmployeesService employeesService) {
-        this.employeesService = employeesService;
-    }
+    private final EmployeesService employeesService;
 
     @GetMapping
     public List<EmployeeDto> listEmployees(@RequestHeader HttpHeaders headers) {
@@ -34,9 +32,9 @@ public class EmployeesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto command, UriComponentsBuilder builder) {
-        var resource = employeesService.createEmployee(command);
-        return ResponseEntity.created(builder.path("/api/employees/{id}").buildAndExpand(resource.id()).toUri()).body(resource);
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeToCreate, UriComponentsBuilder builder) {
+        var employee = employeesService.createEmployee(employeeToCreate);
+        return ResponseEntity.created(builder.path("/api/employees/{id}").buildAndExpand(employee.id()).toUri()).body(employee);
     }
 
     @PutMapping("/{id}")
