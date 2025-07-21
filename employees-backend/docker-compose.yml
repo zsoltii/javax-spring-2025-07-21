@@ -10,3 +10,9 @@ services:
       - "5432:5432"
     volumes:
       - ../docker/postgress/data:/var/lib/postgresql/data
+  employees-redis:
+    image: redis
+    container_name: employees-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
