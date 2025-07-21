@@ -13,8 +13,8 @@ spring:
     default-property-inclusion: non_null
   cache:
     type: hazelcast
-  hazelcast:
-    config: classpath:hazelcast.yaml
+    hazelcast:
+      config: classpath:hazelcast.yaml
 management:
   endpoints:
     web:
