@@ -1,0 +1,12 @@
+services:
+  training-db:
+    image: postgres
+    container_name: employees-postgres
+    environment:
+      - POSTGRES_DB=employees
+      - POSTGRES_USER=employees
+      - POSTGRES_PASSWORD=employees
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../docker/postgress/data:/var/lib/postgresql/data
