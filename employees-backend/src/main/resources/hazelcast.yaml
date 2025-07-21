@@ -1,0 +1,18 @@
+hazelcast:
+  instance-name: employees-hazelcast
+  network:
+    join:
+      multicast:
+        enabled: false
+  map:
+    default:
+      time-to-live-seconds: 3600
+      max-idle-seconds: 1800
+#      backup-count: 1
+#      async-backup-count: 0
+#      eviction:
+#        size: 10000
+#        max-size-policy: PER_NODE
+#        eviction-policy: LRU
+#      in-memory-format: OBJECT
+#      read-backup-data: true
