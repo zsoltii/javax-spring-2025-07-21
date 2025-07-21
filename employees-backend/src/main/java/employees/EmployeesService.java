@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,10 @@ public class EmployeesService {
     }
 
     @Caching(evict = {
-            @CacheEvict(cacheNames = { EMPLOYEE, EMPLOYEES }, allEntries = true),
-            @CacheEvict(value = EMPLOYEE, key = "#id")
+            //            @CacheEvict(value = EMPLOYEE, key = "#id"),
+            @CacheEvict(cacheNames = { EMPLOYEE, EMPLOYEES }, allEntries = true)
     })
+    @CachePut(value = EMPLOYEE, key = "#id")
     @Transactional
     public EmployeeDto updateEmployee(long id, EmployeeDto command) {
         Employee employee = repository.findById(id).orElseThrow(notFountException(id));
