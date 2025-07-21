@@ -11,6 +11,10 @@ spring:
     generate-ddl: true
   jackson:
     default-property-inclusion: non_null
+  cache:
+    cache-names: employee,employees
+    redis:
+      time-to-live: 10m
 
 management:
   endpoints:
