@@ -2,6 +2,8 @@ package employees;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,11 +12,14 @@ import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeesService {
 
     private final EmployeesRepository repository;
 
+    @Cacheable("employees")
     public List<EmployeeDto> listEmployees() {
+        log.info("listEmployees");
         return repository.findAllResources();
     }
 
