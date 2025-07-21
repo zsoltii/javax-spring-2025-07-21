@@ -47,4 +47,8 @@ public class EmployeesService {
         return () -> new EmployeeNotFoundException("Employee not found with id: %d".formatted(id));
     }
 
+    public long countEmpleyees() {
+        return repository.count();
+    }
+
 }
