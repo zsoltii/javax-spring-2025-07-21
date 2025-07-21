@@ -11,6 +11,14 @@ spring:
     generate-ddl: true
   jackson:
     default-property-inclusion: non_null
+  quartz:
+    job-store-type: jdbc
+    properties:
+      org.quartz.jobStore.class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+    jdbc:
+      initialize-schema: always
+
 
 management:
   endpoints:
