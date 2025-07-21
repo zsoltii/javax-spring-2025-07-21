@@ -17,6 +17,9 @@ public class CounterController {
 
     private final CounterService counterService;
 
+    /**
+     * immediately returns with HTTP 202 Accepted status.
+     */
     @GetMapping("/api/counter")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void counter() {
@@ -25,6 +28,9 @@ public class CounterController {
         log.info("Started counter async");
     }
 
+    /**
+     * returns with HTTP 200 OK status when the counter is finished.
+     */
     @GetMapping("/api/counter-future")
     @ResponseStatus(HttpStatus.OK)
     public CompletableFuture<Void> counterFuture() {
