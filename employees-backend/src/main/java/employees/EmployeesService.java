@@ -22,7 +22,7 @@ public class EmployeesService {
     }
 
     public EmployeeDto createEmployee(EmployeeDto command) {
-        Employee employee = new Employee(command.name().toUpperCase());
+        Employee employee = new Employee(command.name());
         repository.save(employee);
         return toDto(employee);
     }
