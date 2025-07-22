@@ -2,3 +2,4 @@ GET http://localhost:8081/api/messages
 
 ###
 
+GET http://localhost:8081/api/messages-cf
