@@ -35,9 +35,10 @@ Accept: application/json
 }
 
 ### Update employee
-PUT http://localhost:8081/api/employees/2
+PUT http://localhost:8081/api/employees/6
 Content-Type: application/json
 Accept: application/json
+If-Match: 1
 
 {
   "name": "John Doe"

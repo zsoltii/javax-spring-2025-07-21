@@ -3,6 +3,8 @@ package employees;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +49,15 @@ public class EmployeesController {
 
     @PutMapping("/{id}")
     public EmployeeDto updateEmployee(
-            @PathVariable("id") long id, @RequestBody EmployeeDto command) {
+            @PathVariable("id") long id,
+            @RequestBody EmployeeDto command,
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+        EmployeeDto existsEmployee = employeesService.findEmployeeById(id);
+        int expectedVersion = Integer.parseInt(ifMatch.replaceAll("\"", ""));
+        final int currentVersion = existsEmployee.version();
+        if (expectedVersion != currentVersion) {
+            throw new UpdateEmployeeVersionMissMatchException(currentVersion, expectedVersion);
+        }
         return employeesService.updateEmployee(id, command);
     }
 

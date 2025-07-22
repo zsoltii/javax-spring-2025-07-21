@@ -6,6 +6,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.net.URI;
 import java.util.List;
@@ -31,4 +32,12 @@ public class EmployeesExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler
+    public ProblemDetail handle(UpdateEmployeeVersionMissMatchException exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.PRECONDITION_FAILED, "Version missmatch");
+        problemDetail.setDetail("Current version: %d, Expected version: %d".formatted(exception.getCurrentVersion(), exception.getExpectedVersion()));
+        problemDetail.setTitle("version missmatch");
+        problemDetail.setType(URI.create("https://example.com/api/employees"));
+        return problemDetail;
+    }
 }
