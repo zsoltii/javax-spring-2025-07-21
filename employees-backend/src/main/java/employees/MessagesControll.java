@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -29,5 +30,10 @@ public class MessagesControll {
         SseEmitter emitter = new SseEmitter();
         messagesService.counterCompletableFuture(emitter);
         return emitter;
+    }
+
+    @EventListener
+    public void onMessageEvent(EmployeeDto employeeDto) {
+        log.info("Received Employee Created Event message: {}", employeeDto);
     }
 }

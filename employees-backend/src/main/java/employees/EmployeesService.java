@@ -1,7 +1,8 @@
 package employees;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
 public class EmployeesService {
 
     private final EmployeesRepository repository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public List<EmployeeDto> listEmployees() {
         return repository.findAllResources();
@@ -25,7 +27,11 @@ public class EmployeesService {
     public EmployeeDto createEmployee(EmployeeDto command) {
         Employee employee = new Employee(command.name().toUpperCase());
         repository.save(employee);
-        return toDto(employee);
+        final EmployeeDto employeeDto = toDto(employee);
+        
+        applicationEventPublisher.publishEvent(employeeDto); // TODO create an event dto: EmployeeCreatedEventDto
+        
+        return employeeDto;
     }
 
     @Transactional
