@@ -7,7 +7,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @ControllerAdvice
 public class EmployeesExceptionHandler {
@@ -24,6 +26,8 @@ public class EmployeesExceptionHandler {
                 .map((FieldError fe) -> new Violation(fe.getField(), fe.getDefaultMessage()))
                 .toList();
         problemDetail.setProperty("violations", violations);
+        problemDetail.setProperty("custom-field", UUID.randomUUID().toString());
+        problemDetail.setType(URI.create("https://example.com/api/employees"));
         return problemDetail;
     }
 

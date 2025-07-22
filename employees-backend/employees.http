@@ -6,6 +6,11 @@ Accept: application/json
 GET http://localhost:8081/api/employees/2
 Accept: application/json
 
+### Find employee by id with etag
+GET http://localhost:8081/api/employees/2
+If-None-Match: "-334418537"
+Accept: application/json
+
 ### Create employee
 POST http://localhost:8081/api/employees
 Content-Type: application/json

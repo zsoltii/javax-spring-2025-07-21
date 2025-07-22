@@ -26,19 +26,26 @@ public class EmployeesController {
     }
 
     @GetMapping("/{id}")
-    public EmployeeDto findEmployeeById(@PathVariable("id") long id) {
-        return employeesService.findEmployeeById(id);
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable("id") long id) {
+        final EmployeeDto employeeById = employeesService.findEmployeeById(id);
+        return ResponseEntity.ok()
+                .eTag(Integer.toString(employeeById.hashCode()))
+                .body(employeeById);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeToCreate, UriComponentsBuilder builder) {
+    public ResponseEntity<EmployeeDto> createEmployee(
+            @Valid @RequestBody EmployeeDto employeeToCreate, UriComponentsBuilder builder) {
         var employee = employeesService.createEmployee(employeeToCreate);
-        return ResponseEntity.created(builder.path("/api/employees/{id}").buildAndExpand(employee.id()).toUri()).body(employee);
+        return ResponseEntity.created(
+                        builder.path("/api/employees/{id}").buildAndExpand(employee.id()).toUri())
+                .body(employee);
     }
 
     @PutMapping("/{id}")
-    public EmployeeDto updateEmployee(@PathVariable("id") long id, @RequestBody EmployeeDto command) {
+    public EmployeeDto updateEmployee(
+            @PathVariable("id") long id, @RequestBody EmployeeDto command) {
         return employeesService.updateEmployee(id, command);
     }
 
@@ -47,5 +54,4 @@ public class EmployeesController {
     public void deleteEmployee(@PathVariable("id") long id) {
         employeesService.deleteEmployee(id);
     }
-
 }
