@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,7 @@ public class EmployeesController {
         final EmployeeDto employeeById = employeesService.findEmployeeById(id);
         return ResponseEntity.ok()
                 .eTag(Integer.toString(employeeById.version()))
+                .lastModified(employeeById.updatedAt().atZone(ZoneId.systemDefault()))
                 .body(employeeById);
     }
 

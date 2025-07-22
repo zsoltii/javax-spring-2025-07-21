@@ -3,12 +3,17 @@ GET http://localhost:8081/api/employees
 Accept: application/json
 
 ### Find employee by id
-GET http://localhost:8081/api/employees/3
+GET http://localhost:8081/api/employees/6
 Accept: application/json
 
 ### Find employee by id with etag
 GET http://localhost:8081/api/employees/3
 If-None-Match: "0"
+Accept: application/json
+
+### Find employee by id with date
+GET http://localhost:8081/api/employees/6
+If-Modified-Since: Tue, 22 Jul 2025 08:45:20 GMT
 Accept: application/json
 
 ### Create employee

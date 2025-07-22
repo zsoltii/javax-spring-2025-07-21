@@ -40,7 +40,7 @@ public class EmployeesService {
     }
 
     private EmployeeDto toDto(Employee employee) {
-        return new EmployeeDto(employee.getId(), employee.getName(), employee.getVersion());
+        return new EmployeeDto(employee.getId(), employee.getName(), employee.getVersion(), employee.getUpdatedAt());
     }
 
     private Supplier<EmployeeNotFoundException> notFountException(long id) {
