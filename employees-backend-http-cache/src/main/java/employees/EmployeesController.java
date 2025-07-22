@@ -26,8 +26,12 @@ public class EmployeesController {
     }
 
     @GetMapping("/{id}")
-    public EmployeeDto findEmployeeById(@PathVariable("id") long id) {
-        return employeesService.findEmployeeById(id);
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable("id") long id) {
+        EmployeeDto employee = employeesService.findEmployeeById(id);
+        return ResponseEntity
+                .ok()
+                .eTag(Integer.toString(employee.hashCode()))
+                .body(employee);
     }
 
     @PostMapping

@@ -1,10 +1,12 @@
 ### List all employees
 GET http://localhost:8081/api/employees
-Accept: application/json
 
 ### Find employee by id
-GET http://localhost:8081/api/employees/2
-Accept: application/json
+GET http://localhost:8081/api/employees/1
+
+###
+GET http://localhost:8081/api/employees/1
+If-None-Match: "-1367319356"
 
 ### Create employee
 POST http://localhost:8081/api/employees
@@ -30,7 +32,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "John Doe"
+  "name": "John Doe2"
 }
 
 ### Delete employee
