@@ -8,6 +8,10 @@ GET http://localhost:8081/api/employees/1
 GET http://localhost:8081/api/employees/1
 If-None-Match: "2"
 
+###
+GET http://localhost:8081/api/employees/1
+If-Modified-Since: 2025-07-22T08:44:00Z
+
 ### Create employee
 POST http://localhost:8081/api/employees
 Content-Type: application/json
@@ -30,6 +34,7 @@ Accept: application/json
 PUT http://localhost:8081/api/employees/1
 Content-Type: application/json
 Accept: application/json
+If-Match: "0"
 
 {
   "name": "John Doe 2"

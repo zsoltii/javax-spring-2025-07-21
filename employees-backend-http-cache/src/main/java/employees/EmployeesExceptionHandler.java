@@ -32,4 +32,11 @@ public class EmployeesExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler
+    public ProblemDetail handle(PreconditionFailedException exception) {
+        var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.PRECONDITION_FAILED, exception.getMessage());
+        problemDetail.setType(URI.create("https://example.com/precondition-failed"));
+        return problemDetail;
+    }
+
 }

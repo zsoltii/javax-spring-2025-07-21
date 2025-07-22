@@ -14,7 +14,8 @@ public class EmployeesService {
     private final EmployeesRepository repository;
 
     public List<EmployeeDto> listEmployees() {
-        return repository.findAllResources();
+//        return repository.findAllResources();
+        return repository.findAllBy(EmployeeDto.class);
     }
 
     public EmployeeDto findEmployeeById(long id) {
@@ -39,7 +40,7 @@ public class EmployeesService {
     }
 
     private EmployeeDto toDto(Employee employee) {
-        return new EmployeeDto(employee.getId(), employee.getName(), employee.getVersion());
+        return new EmployeeDto(employee.getId(), employee.getName(), employee.getVersion(), employee.getLastModifiedAt());
     }
 
     private Supplier<EmployeeNotFoundException> notFountException(long id) {

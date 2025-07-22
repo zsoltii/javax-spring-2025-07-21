@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -32,6 +33,7 @@ public class EmployeesController {
                 .ok()
 //                .eTag(Integer.toString(employee.hashCode()))
                 .eTag(Integer.toString(employee.version()))
+                .lastModified(employee.lastModifiedAt().atZone(ZoneId.systemDefault()))
                 .body(employee);
     }
 
@@ -43,7 +45,17 @@ public class EmployeesController {
     }
 
     @PutMapping("/{id}")
-    public EmployeeDto updateEmployee(@PathVariable("id") long id, @RequestBody EmployeeDto command) {
+    public EmployeeDto updateEmployee(@PathVariable("id") long id, @RequestBody EmployeeDto command,
+                                      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch
+                                      ) {
+        var existing = employeesService.findEmployeeById(id);
+        int versionInHeader = Integer.parseInt(ifMatch.replaceAll("\"", ""));
+
+        if (existing.version() != versionInHeader) {
+            throw new PreconditionFailedException(
+                    "Version mismatch: expected %d but found %d".formatted(versionInHeader, existing.version()));
+        }
+
         return employeesService.updateEmployee(id, command);
     }
 

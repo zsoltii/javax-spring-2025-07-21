@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface EmployeesRepository extends JpaRepository<Employee, Long> {
 
-    @Query("select new employees.EmployeeDto(e.id, e.name, e.version) from Employee e")
-    List<EmployeeDto> findAllResources();
+//    @Query("select new employees.EmployeeDto(e.id, e.name, e.version, e.lastModifiedAt) from Employee e")
+//    List<EmployeeDto> findAllResources();
+
+    <T> List<T> findAllBy(Class<T> type);
 }
