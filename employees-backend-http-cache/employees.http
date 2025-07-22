@@ -6,7 +6,7 @@ GET http://localhost:8081/api/employees/1
 
 ###
 GET http://localhost:8081/api/employees/1
-If-None-Match: "-1367319356"
+If-None-Match: "2"
 
 ### Create employee
 POST http://localhost:8081/api/employees
@@ -32,7 +32,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "John Doe2"
+  "name": "John Doe 2"
 }
 
 ### Delete employee

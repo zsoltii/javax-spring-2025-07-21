@@ -30,7 +30,8 @@ public class EmployeesController {
         EmployeeDto employee = employeesService.findEmployeeById(id);
         return ResponseEntity
                 .ok()
-                .eTag(Integer.toString(employee.hashCode()))
+//                .eTag(Integer.toString(employee.hashCode()))
+                .eTag(Integer.toString(employee.version()))
                 .body(employee);
     }
 
