@@ -35,3 +35,6 @@ Accept: application/json
 
 ### Delete employee
 DELETE http://localhost:8081/api/employees/1
+
+### Messages
+GET http://localhost:8081/api/messages
