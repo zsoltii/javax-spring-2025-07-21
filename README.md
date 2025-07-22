@@ -1,5 +1,17 @@
 # Spring oktatás anyagai
 
+## Ütemezés
+
+- Spring Boot Developer Tools
+- Spring Data JPA audit
+- Hibernate Envers, Spring Data Envers
+- Aszinkron végrehajtás és ütemezés
+- Cache-elés, EHCache és Redis integráció
+- HTTP cache-elés
+- Server-sent events, WebSockets
+
+## Segédletek
+
 ```shell
 docker run -d -e POSTGRES_DB=employees -e POSTGRES_USER=employees -e POSTGRES_PASSWORD=employees -p 5432:5432 --name employees-postgres postgres
 ```
