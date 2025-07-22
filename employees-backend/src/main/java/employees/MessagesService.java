@@ -1,5 +1,6 @@
 package employees;
 
+import lombok.SneakyThrows;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -17,6 +18,12 @@ public class MessagesService {
             emitter.send("Message " + i);
         }
         emitter.complete();
+    }
+
+    @Async
+    @SneakyThrows
+    public void connected(SseEmitter emitter) {
+        emitter.send("Connected");
     }
 
     public CompletableFuture<Void> counterCompletableFuture(SseEmitter emitter) {
