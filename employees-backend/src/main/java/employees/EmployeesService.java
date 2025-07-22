@@ -15,7 +15,7 @@ public class EmployeesService {
     private final EmployeesRepository repository;
 
     public List<EmployeeDto> listEmployees() {
-        return repository.findAllResources();
+        return repository.findAllBy(EmployeeDto.class);
     }
 
     public EmployeeDto findEmployeeById(long id) {
