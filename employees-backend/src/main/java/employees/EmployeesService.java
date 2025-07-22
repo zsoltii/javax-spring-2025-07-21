@@ -1,7 +1,8 @@
 package employees;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
 public class EmployeesService {
 
     private final EmployeesRepository repository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public List<EmployeeDto> listEmployees() {
         return repository.findAllResources();
@@ -25,7 +27,10 @@ public class EmployeesService {
     public EmployeeDto createEmployee(EmployeeDto command) {
         Employee employee = new Employee(command.name().toUpperCase());
         repository.save(employee);
-        return toDto(employee);
+        final EmployeeDto employeeDto = toDto(employee);
+        simpMessagingTemplate.convertAndSend(
+                "/topic/employees", new ResponseMessage("Employee created: " + employeeDto.name()));
+        return employeeDto;
     }
 
     @Transactional
@@ -46,5 +51,4 @@ public class EmployeesService {
     private Supplier<EmployeeNotFoundException> notFountException(long id) {
         return () -> new EmployeeNotFoundException("Employee not found with id: %d".formatted(id));
     }
-
 }
