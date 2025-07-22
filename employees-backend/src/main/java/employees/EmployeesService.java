@@ -1,6 +1,7 @@
 package employees;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,8 @@ public class EmployeesService {
 
     private final EmployeesRepository repository;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
     public List<EmployeeDto> listEmployees() {
         return repository.findAllResources();
     }
@@ -24,7 +27,12 @@ public class EmployeesService {
     public EmployeeDto createEmployee(EmployeeDto command) {
         Employee employee = new Employee(command.name().toUpperCase());
         repository.save(employee);
-        return toDto(employee);
+        EmployeeDto dto = toDto(employee);
+
+        messagingTemplate.convertAndSend("/topic/employees",
+                new ResponseMessage("Employee created: %s".formatted(dto.name())));
+
+        return dto;
     }
 
     @Transactional
