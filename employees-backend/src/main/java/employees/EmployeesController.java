@@ -29,7 +29,7 @@ public class EmployeesController {
     public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable("id") long id) {
         final EmployeeDto employeeById = employeesService.findEmployeeById(id);
         return ResponseEntity.ok()
-                .eTag(Integer.toString(employeeById.hashCode()))
+                .eTag(Integer.toString(employeeById.version()))
                 .body(employeeById);
     }
 

@@ -16,6 +16,9 @@ public class Employee {
 
     private String name;
 
+    @Version
+    private int version;
+
     public Employee(String name) {
         this.name = name;
     }

@@ -3,12 +3,12 @@ GET http://localhost:8081/api/employees
 Accept: application/json
 
 ### Find employee by id
-GET http://localhost:8081/api/employees/2
+GET http://localhost:8081/api/employees/3
 Accept: application/json
 
 ### Find employee by id with etag
-GET http://localhost:8081/api/employees/2
-If-None-Match: "-334418537"
+GET http://localhost:8081/api/employees/3
+If-None-Match: "0"
 Accept: application/json
 
 ### Create employee
@@ -30,7 +30,7 @@ Accept: application/json
 }
 
 ### Update employee
-PUT http://localhost:8081/api/employees/1
+PUT http://localhost:8081/api/employees/2
 Content-Type: application/json
 Accept: application/json
 
