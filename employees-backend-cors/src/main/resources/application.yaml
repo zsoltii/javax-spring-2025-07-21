@@ -22,3 +22,8 @@ logging:
   level:
     employees: DEBUG
     org.hibernate.SQL: TRACE
+
+employees:
+  cors:
+    mapping: "/api/**"
+    origins: "*"
