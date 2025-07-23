@@ -27,3 +27,7 @@ docker run --name employees-redis -p 6379:6379 -d redis
 Blog:
 
 https://www.jtechlog.hu/
+
+```shell
+docker run -d -p 8090:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin --name keycloak quay.io/keycloak/keycloak start-dev
+```
