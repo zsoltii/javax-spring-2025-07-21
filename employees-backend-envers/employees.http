@@ -1,0 +1,37 @@
+### List all employees
+GET http://localhost:8081/api/employees
+Accept: application/json
+
+### Find employee by id
+GET http://localhost:8081/api/employees/2
+Accept: application/json
+
+### Create employee
+POST http://localhost:8081/api/employees
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Jack Doe"
+}
+
+### Validation error
+POST http://localhost:8081/api/employees
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": ""
+}
+
+### Update employee
+PUT http://localhost:8081/api/employees/47
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "John Doe"
+}
+
+### Delete employee
+DELETE http://localhost:8081/api/employees/1
