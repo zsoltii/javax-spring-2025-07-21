@@ -17,8 +17,11 @@ services:
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/data/cert/server.crt
+      - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/data/cert/server.key
     ports:
-      - "8090:8080"
-    command: start-dev
+      # generate the self-signed certificate and key with the createSslCertificate.sh script
+      - "9443:8443"
+    command: start-dev --https-certificate-file=/opt/keycloak/data/cert/server.crt --https-certificate-key-file=/opt/keycloak/data/cert/server.key
     volumes:
       - ../docker/keycloak/data:/opt/keycloak/data
