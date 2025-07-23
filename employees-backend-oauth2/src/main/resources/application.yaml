@@ -11,6 +11,12 @@ spring:
     generate-ddl: true
   jackson:
     default-property-inclusion: non_null
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090/realms/EmployeesRealm
+
 
 management:
   endpoints:
@@ -22,3 +28,4 @@ logging:
   level:
     employees: DEBUG
     org.hibernate.SQL: TRACE
+
