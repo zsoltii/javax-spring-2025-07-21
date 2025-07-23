@@ -26,7 +26,7 @@ public class ClientConfig {
                 builder.baseUrl(employeesProperties.getBackendUrl())
                         .requestInterceptor(
                                 (request, body, execution) -> {
-                                    clientRegistrationId("keycloak")
+                                    clientRegistrationId("keycloak")  // same as in application.properties spring.security.oauth2.client.registration.keycloak
                                             .accept(request.getAttributes());
                                     return execution.execute(request, body);
                                 })
