@@ -10,3 +10,15 @@ services:
       - "5432:5432"
     volumes:
       - ../docker/postgress/data:/var/lib/postgresql/data
+
+  training-keycloak:
+    image: quay.io/keycloak/keycloak
+    container_name: keycloak
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    ports:
+      - "8090:8080"
+    command: start-dev
+    volumes:
+      - ../docker/keycloak/data:/opt/keycloak/data
