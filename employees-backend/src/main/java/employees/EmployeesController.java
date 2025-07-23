@@ -20,6 +20,7 @@ public class EmployeesController {
     private final EmployeesService employeesService;
 
     @GetMapping
+//    @CrossOrigin("http://localhost:63342")
     public List<EmployeeDto> listEmployees(@RequestHeader HttpHeaders headers) {
         log.debug("Headers: {}", headers);
         return employeesService.listEmployees();

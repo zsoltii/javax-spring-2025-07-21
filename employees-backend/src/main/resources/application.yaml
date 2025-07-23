@@ -18,7 +18,15 @@ management:
       exposure:
         include: '*'
 
+
 logging:
   level:
     employees: DEBUG
     org.hibernate.SQL: TRACE
+
+employees:
+  cors:
+    # default will be empty,because of security reasons
+    allowed-origins: http://localhost:63342
+    # default will be empty,because of security reasons
+    mapping: /**
