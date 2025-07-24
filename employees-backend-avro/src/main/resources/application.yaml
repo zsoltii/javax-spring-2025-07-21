@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employees
+    username: employees
+    password: employees
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+  jackson:
+    default-property-inclusion: non_null
+  cloud:
+    stream:
+      function:
+        bindings:
+          createEmployee-in-0: employee-backend-command
+          createEmployee-out-0: employee-backend-reply
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    employees: DEBUG
+    org.hibernate.SQL: TRACE
