@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -19,9 +20,16 @@ public class EmployeesController {
 
     private final EmployeesService employeesService;
 
+    private Random random = new Random();
+
     @GetMapping
     public List<EmployeeDto> listEmployees(@RequestHeader HttpHeaders headers) {
         log.debug("Headers: {}", headers);
+
+        if (random.nextDouble() > 0.66) {
+            throw new IllegalStateException("Random error");
+        }
+
         return employeesService.listEmployees();
     }
 

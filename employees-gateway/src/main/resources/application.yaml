@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: employees-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: employees
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/**
+              filters:
+                - AddRequestHeader=X-Gateway, Hello
+
+server:
+  port: 8000
+
