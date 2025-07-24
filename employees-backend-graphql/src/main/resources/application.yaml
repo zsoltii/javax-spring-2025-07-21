@@ -13,6 +13,9 @@ spring:
     default-property-inclusion: non_null
   liquibase:
     change-log: classpath:db/db-changelog.yaml
+  graphql:
+    graphiql:
+      enabled: true
 
 management:
   endpoints:
