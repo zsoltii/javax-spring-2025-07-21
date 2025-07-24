@@ -1,0 +1,18 @@
+schema {
+       query: Query
+}
+
+type Query {
+    employees: [Employee!]!
+}
+
+type Employee {
+    id: ID!
+    name: String!
+    addresses: [Address!]
+}
+
+type Address {
+    id: ID!
+    city: String!
+}
