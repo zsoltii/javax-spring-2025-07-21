@@ -14,3 +14,9 @@ logging:
 
 employees:
   backend-url: http://localhost:8081
+
+resilience4j:
+  retry:
+    instances:
+      clientRetry:
+        max-attempts: 5
