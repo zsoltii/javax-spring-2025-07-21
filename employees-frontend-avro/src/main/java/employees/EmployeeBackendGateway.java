@@ -10,6 +10,7 @@ public class EmployeeBackendGateway {
     private final StreamBridge streamBridge;
 
     public void createEmployee(Employee employee) {
-        streamBridge.send("employee-backend-command", employee);
+        streamBridge.send("createEmployee",
+                new CreateEmployeeCommand(employee.getName()));
     }
 }
