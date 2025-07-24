@@ -13,7 +13,7 @@ logging:
     org.hibernate.SQL: TRACE
 
 employees:
-  backend-url: http://localhost:8081
+  backend-url: http://localhost:8000
 
 resilience4j:
   retry:
