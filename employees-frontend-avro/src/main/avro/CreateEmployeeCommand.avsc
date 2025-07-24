@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "CreateEmployeeCommand",
+  "namespace": "employees",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    }
+  ]
+}

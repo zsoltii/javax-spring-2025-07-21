@@ -14,3 +14,12 @@ logging:
 
 employees:
   backend-url: http://localhost:8081
+spring:
+  cloud:
+    stream:
+      bindings:
+        createEmployee:
+          destination: employee-backend-command
+          contentType: application/*+avro
+
+
