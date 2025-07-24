@@ -11,6 +11,12 @@ spring:
     generate-ddl: true
   jackson:
     default-property-inclusion: non_null
+  cloud:
+    stream:
+      function:
+        bindings:
+          createEmployee-in-0: employee-backend-command
+          createEmployee-out-0: employee-backend-reply
 
 management:
   endpoints:
