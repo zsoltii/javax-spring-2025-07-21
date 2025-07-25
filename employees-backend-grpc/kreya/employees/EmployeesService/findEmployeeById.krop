@@ -1,0 +1,13 @@
+{
+  "details": {
+    "methodFqn": "employees.EmployeesService.findEmployeeById"
+  },
+  "requests": [
+    {
+      "location": "findEmployeeById-request.json"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "grpc",
+  "importStreamId": "1a3f7ab6-7d94-4b46-a38b-4bd219d703bf"
+}

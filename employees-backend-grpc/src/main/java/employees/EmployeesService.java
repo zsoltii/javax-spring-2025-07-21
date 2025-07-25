@@ -1,14 +1,17 @@
 package employees;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class EmployeesService {
 
     private final EmployeesRepository repository;
@@ -21,7 +24,7 @@ public class EmployeesService {
         return toDto(repository.findById(id).orElseThrow(notFountException(id)));
     }
 
-    public EmployeeDto createEmployee(EmployeeDto command) {
+    public EmployeeDto createEmployee(@Valid EmployeeDto command) {
         Employee employee = new Employee(command.name());
         repository.save(employee);
         return toDto(employee);

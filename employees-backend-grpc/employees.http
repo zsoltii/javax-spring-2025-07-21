@@ -1,37 +1,46 @@
 ### List all employees
-GET http://localhost:8081/api/employees
-Accept: application/json
+GRPC localhost:9090/employees.EmployeesService/listEmployees
 
 ### Find employee by id
-GET http://localhost:8081/api/employees/2
-Accept: application/json
-
-### Create employee
-POST http://localhost:8081/api/employees
-Content-Type: application/json
-Accept: application/json
+GRPC localhost:9090/employees.EmployeesService/findEmployeeById
 
 {
-  "name": "Jack Doe"
+  "value": "1"
+}
+
+### Not found
+GRPC localhost:9090/employees.EmployeesService/findEmployeeById
+
+{
+  "value": "1000"
+}
+
+
+### Create employee
+GRPC localhost:9090/employees.EmployeesService/createEmployee
+
+{
+  "name": "John Doe"
 }
 
 ### Validation error
-POST http://localhost:8081/api/employees
-Content-Type: application/json
-Accept: application/json
+GRPC localhost:9090/employees.EmployeesService/createEmployee
 
 {
   "name": ""
 }
 
 ### Update employee
-PUT http://localhost:8081/api/employees/1
-Content-Type: application/json
-Accept: application/json
+GRPC localhost:9090/employees.EmployeeService/updateEmployee
 
 {
+  "id": "1",
   "name": "John Doe"
 }
 
 ### Delete employee
-DELETE http://localhost:8081/api/employees/1
+GRPC localhost:9090/employees.EmployeeService/deleteEmployee
+
+{
+  "value": "1"
+}
