@@ -55,3 +55,4 @@ docker run -d -p 8090:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_
 - [Microservices Patterns: With examples in Java First Edition by Chris Richardson (Author)](https://www.amazon.com/dp/1617294543)
 - [Microservices with Spring Boot 3 and Spring Cloud: Build resilient and scalable microservices using Spring Cloud, Istio, and Kubernetes 3rd Edition](https://www.amazon.com/Microservices-Spring-Boot-Cloud-microservices/dp/1805128698)
 - [Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems 1st Edition](https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321)
+- [Java Application Architecture: Modularity Patterns with Examples Using OSGi (Robert C. Martin Series) 1st Edition](https://www.amazon.com/Java-Application-Architecture-Modularity-Patterns-ebook/dp/B007KOGS5U)
