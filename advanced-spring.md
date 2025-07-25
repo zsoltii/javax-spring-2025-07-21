@@ -967,3 +967,133 @@ public class WebSocketMessageController {
 
 }
 ```
+
+## Spring for GraphQL
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-graphql</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.graphql</groupId>
+    <artifactId>spring-graphql-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+`application.yaml`
+
+```yaml
+graphql:
+  graphiql:
+    enabled: true
+```
+
+```graphql
+schema {
+  query: Query
+}
+
+type Address {
+  city: String!
+  id: ID!
+}
+
+type Employee {
+  addresses: [Address!]!
+  id: ID!
+  name: String!
+}
+
+type Query {
+  employees: [Employee!]!
+}
+```
+
+```java
+public record EmployeeDto(Long id, String name) {
+
+}
+
+public record AddressDto(Long id, String city) {
+}
+```
+
+```java
+@Controller
+@RequiredArgsConstructor
+public class EmployeeController {
+
+    private final EmployeeRepository employeeRepository;
+    private final AddressRepository addressRepository;
+
+    @QueryMapping
+    public List<EmployeeDto> employees() {
+        return employeeRepository.findAllDto();
+    }
+
+    @SchemaMapping
+    public List<Address> addresses(Employee employee) {
+        return addressRepository.findAddressByEmployee(employee);
+    }
+}
+```
+
+`EmployeeRepository`
+
+```java
+@Query("select new empapp.dto.EmployeeDto(e.id, e.name) from Employee e")
+    List<EmployeeDto> findAllDto();
+```
+
+`AddressRepository`
+
+```java
+List<Address> findAddressByEmployee(Employee employee);
+```
+
+`http://localhost:8081/graphiql`
+
+```graphql
+{
+  employees {
+    id
+    name
+    addresses {
+      id
+      city
+    }
+  }
+}
+```
+
+Batch
+
+```java
+@BatchMapping(typeName = "Employee", field = "addresses")
+public Map<EmployeeDto, List<AddressDto>> addresses(List<EmployeeDto> employees) {
+    List<Long> employeeIds = employees.stream()
+            .map(EmployeeDto::id)
+            .toList();
+    List<Object[]> addressesByEmployeeId =
+            addressRepository.findAllAddressesByEmployeeIds(employeeIds);
+    Map<Long, List<AddressDto>> addressMap = addressesByEmployeeId.stream()
+            .collect(Collectors.groupingBy(
+                    arr -> (Long) arr[0],
+                    Collectors.mapping(arr -> (AddressDto) arr[1], Collectors.toList())
+            ));
+
+    return employees.stream().collect(Collectors.toMap(
+            e -> e,
+            e -> addressMap.getOrDefault(e.id(), List.of())
+    ));
+}
+```
+
+`AddressRepository`
+
+```java
+@Query("select a.employee.id, new empapp.dto.AddressDto(a.id, a.city) from Address a where a.employee.id in :ids")
+    List<Object[]> findAllAddressesByEmployeeIds(List<Long> ids);
+```
