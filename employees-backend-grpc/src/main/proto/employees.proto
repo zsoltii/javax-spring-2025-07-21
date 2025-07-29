@@ -1,0 +1,22 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package employees;
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+message EmployeeMessage {
+  int64 id = 1;
+  string name = 2;
+}
+
+message EmployeeMessageList {
+  repeated EmployeeMessage users = 1;
+}
+
+service EmployeesService {
+  rpc listEmployees(google.protobuf.Empty) returns (EmployeeMessageList);
+  rpc findEmployeeById(google.protobuf.Int32Value) returns (EmployeeMessage);
+  rpc createEmployee(EmployeeMessage) returns (EmployeeMessage);
+  rpc updateEmployee(EmployeeMessage) returns (EmployeeMessage);
+  rpc deleteEmployee(google.protobuf.Int32Value) returns (google.protobuf.Empty);
+}

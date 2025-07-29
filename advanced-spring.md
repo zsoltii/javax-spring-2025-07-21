@@ -967,3 +967,348 @@ public class WebSocketMessageController {
 
 }
 ```
+
+## Spring for GraphQL
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-graphql</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.graphql</groupId>
+    <artifactId>spring-graphql-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+`application.yaml`
+
+```yaml
+graphql:
+  graphiql:
+    enabled: true
+```
+
+```graphql
+schema {
+  query: Query
+}
+
+type Address {
+  city: String!
+  id: ID!
+}
+
+type Employee {
+  addresses: [Address!]!
+  id: ID!
+  name: String!
+}
+
+type Query {
+  employees: [Employee!]!
+}
+```
+
+```java
+public record EmployeeDto(Long id, String name) {
+
+}
+
+public record AddressDto(Long id, String city) {
+}
+```
+
+```java
+@Controller
+@RequiredArgsConstructor
+public class EmployeeController {
+
+    private final EmployeeRepository employeeRepository;
+    private final AddressRepository addressRepository;
+
+    @QueryMapping
+    public List<EmployeeDto> employees() {
+        return employeeRepository.findAllDto();
+    }
+
+    @SchemaMapping
+    public List<Address> addresses(Employee employee) {
+        return addressRepository.findAddressByEmployee(employee);
+    }
+}
+```
+
+`EmployeeRepository`
+
+```java
+@Query("select new empapp.dto.EmployeeDto(e.id, e.name) from Employee e")
+    List<EmployeeDto> findAllDto();
+```
+
+`AddressRepository`
+
+```java
+List<Address> findAddressByEmployee(Employee employee);
+```
+
+`http://localhost:8081/graphiql`
+
+```graphql
+{
+  employees {
+    id
+    name
+    addresses {
+      id
+      city
+    }
+  }
+}
+```
+
+Batch
+
+```java
+@BatchMapping(typeName = "Employee", field = "addresses")
+public Map<EmployeeDto, List<AddressDto>> addresses(List<EmployeeDto> employees) {
+    List<Long> employeeIds = employees.stream()
+            .map(EmployeeDto::id)
+            .toList();
+    List<Object[]> addressesByEmployeeId =
+            addressRepository.findAllAddressesByEmployeeIds(employeeIds);
+    Map<Long, List<AddressDto>> addressMap = addressesByEmployeeId.stream()
+            .collect(Collectors.groupingBy(
+                    arr -> (Long) arr[0],
+                    Collectors.mapping(arr -> (AddressDto) arr[1], Collectors.toList())
+            ));
+
+    return employees.stream().collect(Collectors.toMap(
+            e -> e,
+            e -> addressMap.getOrDefault(e.id(), List.of())
+    ));
+}
+```
+
+`AddressRepository`
+
+```java
+@Query("select a.employee.id, new empapp.dto.AddressDto(a.id, a.city) from Address a where a.employee.id in :ids")
+    List<Object[]> findAllAddressesByEmployeeIds(List<Long> ids);
+```
+
+# gRPC
+
+Mivel a generált DTO-kra nem lehet Bean Validation annotációkat tenni,
+ezért megmaradt a Service és a DTO réteg. Be kellett állítani, hogy a Service réteg
+validáljon.
+
+```java
+@Bean
+public MethodValidationPostProcessor methodValidationPostProcessor() {
+  return new MethodValidationPostProcessor();
+}
+```
+
+```java
+@Validated
+public class EmployeesService {
+
+}
+```
+
+```java
+public EmployeeDto createEmployee(@Valid EmployeeDto command) {
+}
+```
+
+`EmployeesController`, `EmployeesExceptionHandler`, `Violation` törölhető
+
+`pom.xml`
+
+```xml
+<dependency>
+  <groupId>javax.annotation</groupId>
+  <artifactId>javax.annotation-api</artifactId>
+  <version>1.2</version>
+</dependency>
+
+<dependency>
+  <groupId>net.devh</groupId>
+  <artifactId>grpc-server-spring-boot-starter</artifactId>
+  <version>3.1.0.RELEASE</version>
+</dependency>
+```
+
+```xml
+<build>
+  <extensions>
+    <extension>
+      <groupId>kr.motd.maven</groupId>
+      <artifactId>os-maven-plugin</artifactId>
+      <version>1.7.0</version>
+    </extension>
+  </extensions>
+
+  <plugins>
+    <plugin>
+      <groupId>org.xolstice.maven.plugins</groupId>
+      <artifactId>protobuf-maven-plugin</artifactId>
+      <version>0.6.1</version>
+      <configuration>
+        <protocArtifact>
+          com.google.protobuf:protoc:3.19.4:exe:${os.detected.classifier}
+        </protocArtifact>
+        <pluginId>grpc-java</pluginId>
+        <pluginArtifact>
+          io.grpc:protoc-gen-grpc-java:1.45.0:exe:${os.detected.classifier}
+        </pluginArtifact>
+      </configuration>
+      <executions>
+        <execution>
+          <goals>
+            <goal>compile</goal>
+            <goal>compile-custom</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
+  </plugins>
+</build>
+```
+
+`src/main/proto/employees.proto`
+
+```proto
+syntax = "proto3";
+option java_multiple_files = true;
+package employees;
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+message EmployeeMessage {
+  int64 id = 1;
+  string name = 2;
+}
+
+message EmployeeMessageList {
+  repeated EmployeeMessage users = 1;
+}
+
+service EmployeesService {
+  rpc listEmployees(google.protobuf.Empty) returns (EmployeeMessageList);
+  rpc findEmployeeById(google.protobuf.Int32Value) returns (EmployeeMessage);
+  rpc createEmployee(EmployeeMessage) returns (EmployeeMessage);
+  rpc updateEmployee(EmployeeMessage) returns (EmployeeMessage);
+  rpc deleteEmployee(google.protobuf.Int32Value) returns (google.protobuf.Empty);
+}
+```
+
+```java
+package employees;
+
+import com.google.protobuf.Empty;
+import com.google.protobuf.Int32Value;
+import io.grpc.stub.StreamObserver;
+import lombok.RequiredArgsConstructor;
+import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.transaction.annotation.Transactional;
+
+@GrpcService
+@RequiredArgsConstructor
+public class EmployeesServiceController extends EmployeesServiceGrpc.EmployeesServiceImplBase {
+
+    private final EmployeesService employeesService;
+
+    @Override
+    public void listEmployees(Empty request, StreamObserver<EmployeeMessageList> responseObserver) {
+        var employees = employeesService.listEmployees().stream()
+                .map(EmployeesServiceController::toMessage)
+                .toList();
+        var response = EmployeeMessageList.newBuilder().addAllUsers(employees).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void findEmployeeById(Int32Value request, StreamObserver<EmployeeMessage> responseObserver) {
+        long id = request.getValue();
+            var employee = toMessage(employeesService.findEmployeeById(id));
+            responseObserver.onNext(employee);
+            responseObserver.onCompleted();
+    }
+
+    @Override
+    public void createEmployee(EmployeeMessage request, StreamObserver<EmployeeMessage> responseObserver) {
+        EmployeeMessage employee = toMessage(employeesService.createEmployee(new EmployeeDto(request.getId(), request.getName())));
+
+        responseObserver.onNext(employee);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    @Transactional
+    public void updateEmployee(EmployeeMessage request, StreamObserver<EmployeeMessage> responseObserver) {
+        var id = request.getId();
+        var updatedEmployee = toMessage(employeesService.updateEmployee(id,
+                new EmployeeDto(request.getId(), request.getName())));
+        responseObserver.onNext(updatedEmployee);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteEmployee(Int32Value request, StreamObserver<Empty> responseObserver) {
+        var id = request.getValue();
+        employeesService.deleteEmployee(id);
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    private static EmployeeMessage toMessage(EmployeeDto dto) {
+        return EmployeeMessage.newBuilder().setId(dto.id()).setName(dto.name()).build();
+    }
+
+}
+```
+
+Kivételkezelés:
+
+```java
+@GrpcAdvice
+public class GrpcExceptionAdvice {
+
+    @GrpcExceptionHandler(EmployeeNotFoundException.class)
+    public StatusException handleEmployeeNotFoundException(EmployeeNotFoundException exception) {
+        Status status = Status.NOT_FOUND.withDescription(exception.getMessage()).withCause(exception);
+        return status.asException();
+    }
+
+    @GrpcExceptionHandler(ConstraintViolationException.class)
+    public StatusException handleConstraintViolationException(ConstraintViolationException exception) {
+        List<BadRequest.FieldViolation> violations = exception.getConstraintViolations()
+                .stream().map(violation ->
+                        BadRequest.FieldViolation.newBuilder()
+                                .setField(violation.getPropertyPath().toString())
+                                .setDescription(violation.getMessage())
+                                .build()).toList();
+
+            BadRequest badRequest = BadRequest.newBuilder()
+            .addAllFieldViolations(violations)
+           .build();
+
+        com.google.rpc.Status statusProto = com.google.rpc.Status.newBuilder()
+            .setCode(Status.INVALID_ARGUMENT.getCode().value())
+            .setMessage("Validation failed")
+            .addDetails(Any.pack(badRequest))
+            .build();
+
+        return StatusProto.toStatusException(statusProto);
+    }
+
+}
+```
+
+Sajnos az IDEA HTTP Client nem jól kezeli, ezért pl. Kreya használható. A
+gRPC endpoint legyen `http://localhost:9090`.

@@ -1,0 +1,46 @@
+### List all employees
+GRPC localhost:9090/employees.EmployeesService/listEmployees
+
+### Find employee by id
+GRPC localhost:9090/employees.EmployeesService/findEmployeeById
+
+{
+  "value": "1"
+}
+
+### Not found
+GRPC localhost:9090/employees.EmployeesService/findEmployeeById
+
+{
+  "value": "1000"
+}
+
+
+### Create employee
+GRPC localhost:9090/employees.EmployeesService/createEmployee
+
+{
+  "name": "John Doe"
+}
+
+### Validation error
+GRPC localhost:9090/employees.EmployeesService/createEmployee
+
+{
+  "name": ""
+}
+
+### Update employee
+GRPC localhost:9090/employees.EmployeeService/updateEmployee
+
+{
+  "id": "1",
+  "name": "John Doe"
+}
+
+### Delete employee
+GRPC localhost:9090/employees.EmployeeService/deleteEmployee
+
+{
+  "value": "1"
+}

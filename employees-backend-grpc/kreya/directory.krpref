@@ -1,0 +1,14 @@
+{
+  "settings": [
+    {
+      "options": {
+        "grpc": {
+          "endpoint": "localhost:9090"
+        },
+        "rest": {
+          "pathParams": []
+        }
+      }
+    }
+  ]
+}

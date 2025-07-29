@@ -1,0 +1,15 @@
+{
+  "settings": [
+    {
+      "options": {
+        "grpc": {
+          "endpoint": "http://localhost:9090",
+          "disableServerCertificateValidation": true
+        },
+        "rest": {
+          "pathParams": []
+        }
+      }
+    }
+  ]
+}

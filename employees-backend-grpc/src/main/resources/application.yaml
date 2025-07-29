@@ -11,12 +11,6 @@ spring:
     generate-ddl: true
   jackson:
     default-property-inclusion: non_null
-  application:
-    name: employees-backend
-
-eureka:
-  instance:
-    prefer-ip-address: true
 
 management:
   endpoints:
