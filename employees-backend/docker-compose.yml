@@ -23,7 +23,16 @@ services:
     volumes:
       - ../docker/keycloak/data:/opt/keycloak/data
 
-  trainig-broker:
+  employees-redis:
+    image: redis
+    container_name: employees-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - ../docker/redis/data:/data
+
+  training-broker:
     image: apache/kafka:latest
     container_name: broker
     environment:
@@ -41,3 +50,5 @@ services:
       KAFKA_NUM_PARTITIONS: 3
     ports:
       - 9092:9092
+    volumes:
+      - ../docker/kafka/data:/var/lib/kafka/data
