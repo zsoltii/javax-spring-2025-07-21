@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Slf4j
@@ -23,5 +24,15 @@ public class CounterController {
     public void count() {
         counterService.count();
         log.info("Response");
+    }
+
+    /**
+     * returns with HTTP 200 OK status when the counter is finished.
+     */
+    @GetMapping("/api/counter-future")
+    @ResponseStatus(HttpStatus.OK)
+    public CompletableFuture<Void> counterFuture() {
+        log.info("Start counter async (future)");
+        return counterService.counterFuture();
     }
 }

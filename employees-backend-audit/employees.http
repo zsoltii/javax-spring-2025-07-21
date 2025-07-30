@@ -25,7 +25,7 @@ Accept: application/json
 }
 
 ### Update employee
-PUT http://localhost:8081/api/employees/1
+PUT http://localhost:8081/api/employees/4
 Content-Type: application/json
 Accept: application/json
 

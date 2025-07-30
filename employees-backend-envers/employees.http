@@ -25,12 +25,12 @@ Accept: application/json
 }
 
 ### Update employee
-PUT http://localhost:8081/api/employees/47
+PUT http://localhost:8081/api/employees/5
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "John Doe"
+  "name": "John Doe2"
 }
 
 ### Delete employee

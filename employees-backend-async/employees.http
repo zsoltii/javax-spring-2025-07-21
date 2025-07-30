@@ -38,3 +38,6 @@ DELETE http://localhost:8081/api/employees/1
 
 ###Counter
 GET http://localhost:8081/api/counter
+
+###Counter
+GET http://localhost:8081/api/counter-future
